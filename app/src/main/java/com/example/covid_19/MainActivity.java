@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -15,12 +16,13 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.google.android.material.tabs.TabLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private Toolbar toolbar;
     private ViewPager viewPager;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private  SavedFragment savedFragment;
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
+    private List<Response> r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         AndroidNetworking.initialize(getApplicationContext());
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addQueryParameter("country","egypt").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
     .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {
-                Toast.makeText(MainActivity.this,response.getGet(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"sucess" ,Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(response.getResponse());
             }
 
             @Override
