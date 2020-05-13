@@ -67,7 +67,7 @@ public class WorldFragment extends Fragment {
         responseList = responses;
         String oldDate = String.valueOf(responseList.get(189).getDay());
         String time = String.valueOf(responseList.get(189).getTime());
-        time = "Last Updated: "+time.substring(11,19) + " GMT";
+        time = "Last Updated "+time.substring(11,19) + " GMT";
         dateTV.setText(reverseDate(oldDate));
         timeTV.setText(time);
         newTV.setText(responseList.get(189).getCases().getNew());
