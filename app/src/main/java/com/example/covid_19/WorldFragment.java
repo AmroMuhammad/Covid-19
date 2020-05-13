@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class WorldFragment extends Fragment {
     private List<Response> responseList;
     private TextView dateTV;
     private String newMonth;
+    private ProgressBar progressBarWorld;
 
     public WorldFragment() {
         // Required empty public constructor
@@ -50,6 +52,8 @@ public class WorldFragment extends Fragment {
         EventBus.getDefault().register(this);
         super.onViewCreated(view, savedInstanceState);
         dateTV = view.findViewById(R.id.dateTV);
+        progressBarWorld = view.findViewById(R.id.progressBarWorld);
+        progressBarWorld.setVisibility(View.VISIBLE);
     }
 
     @Subscribe
@@ -57,6 +61,7 @@ public class WorldFragment extends Fragment {
         responseList = responses;
         String oldDate = String.valueOf(responseList.get(189).getDay());
         dateTV.setText(reverseDate(oldDate));
+        progressBarWorld.setVisibility(View.GONE);
     }
 
     private String reverseDate(String date) {
