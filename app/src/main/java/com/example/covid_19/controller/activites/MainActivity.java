@@ -1,4 +1,4 @@
-package com.example.covid_19;
+package com.example.covid_19.controller.activites;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +13,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.ANConstants;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.example.covid_19.controller.fragments.CountriesFragment;
+import com.example.covid_19.R;
+import com.example.covid_19.controller.fragments.SavedFragment;
+import com.example.covid_19.controller.fragments.WorldFragment;
+import com.example.covid_19.adaptors.ViewPagerAdaptor;
+import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity  {
     private TabLayout tabLayout;
     private WorldFragment worldFragment;
     private CountriesFragment countriesFragment;
-    private  SavedFragment savedFragment;
+    private SavedFragment savedFragment;
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
 
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity  {
         tabLayout = findViewById(R.id.tabLayout);
         setSupportActionBar(toolbar);
 
-        //new android.app.AlertDialog().build
         worldFragment = new WorldFragment();
         countriesFragment = new CountriesFragment();
         savedFragment = new SavedFragment();

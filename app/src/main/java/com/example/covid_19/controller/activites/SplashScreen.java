@@ -1,4 +1,4 @@
-package com.example.covid_19;
+package com.example.covid_19.controller.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
+
+import com.example.covid_19.R;
 
 public class SplashScreen extends AppCompatActivity {
 

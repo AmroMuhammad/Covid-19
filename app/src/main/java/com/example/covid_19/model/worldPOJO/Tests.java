@@ -1,5 +1,5 @@
 
-package com.example.covid_19;
+package com.example.covid_19.model.worldPOJO;
 
 import com.google.gson.annotations.SerializedName;
 

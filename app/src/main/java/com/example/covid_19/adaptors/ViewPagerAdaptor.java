@@ -1,4 +1,4 @@
-package com.example.covid_19;
+package com.example.covid_19.adaptors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
