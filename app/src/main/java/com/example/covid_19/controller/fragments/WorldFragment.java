@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.covid_19.R;
 import com.example.covid_19.model.worldPOJO.Response;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.mindorks.nybus.NYBus;
+import com.mindorks.nybus.annotation.Subscribe;
+import com.mindorks.nybus.event.Channel;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class WorldFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        NYBus.get().register(this, Channel.ONE);
         super.onViewCreated(view, savedInstanceState);
         dateTV = view.findViewById(R.id.dateTV);
         timeTV= view.findViewById(R.id.timeTV);
@@ -65,7 +65,7 @@ public class WorldFragment extends Fragment {
         progressBarWorld.setVisibility(View.VISIBLE);
     }
 
-    @Subscribe
+    @Subscribe(channelId = Channel.ONE)
     public void setData(List<Response> responses) {
         responseList = responses;
         String oldDate = String.valueOf(responseList.get(189).getDay());
@@ -106,4 +106,5 @@ public class WorldFragment extends Fragment {
         rightDate = date.substring(8, 10) + "/" + newMonth + "/" + date.substring(0, 4);
         return rightDate;
     }
+
 }

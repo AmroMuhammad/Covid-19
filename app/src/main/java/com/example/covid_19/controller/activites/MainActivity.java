@@ -14,21 +14,24 @@ import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
+
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.R;
 import com.example.covid_19.controller.fragments.SavedFragment;
 import com.example.covid_19.controller.fragments.WorldFragment;
 import com.example.covid_19.adaptors.ViewPagerAdaptor;
+import com.example.covid_19.model.countriesPOJO.CountryResponse;
 import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.google.android.material.tabs.TabLayout;
-
-import org.greenrobot.eventbus.EventBus;
+import com.mindorks.nybus.NYBus;
+import com.mindorks.nybus.event.Channel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
+
 
     private static final String TAG = "MainActivity";
     private Toolbar toolbar;
@@ -45,13 +48,38 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //initializing android networking
         AndroidNetworking.initialize(getApplicationContext());
+        worldNetworking();
+        countriesNetworking();
+
+        //inflating views
+        toolbar = findViewById(R.id.toolbar);
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        setSupportActionBar(toolbar);
+
+        //initializing fragments
+        worldFragment = new WorldFragment();
+        countriesFragment = new CountriesFragment();
+        savedFragment = new SavedFragment();
+
+        //initializing viewPager
+        tabLayout.setupWithViewPager(viewPager);
+        fragmentsinit();
+        fragmentTitlesinit();
+        ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
+        viewPager.setAdapter(adaptor);
+
+    }
+
+    private void worldNetworking(){
         AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
-    .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
+                .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {
-                Toast.makeText(MainActivity.this,"sucess" ,Toast.LENGTH_SHORT).show();
-                EventBus.getDefault().post(response.getResponse());
+                Toast.makeText(MainActivity.this,"success" ,Toast.LENGTH_SHORT).show();
+                NYBus.get().post(response.getResponse(), Channel.ONE);
             }
 
             @Override
@@ -60,22 +88,25 @@ public class MainActivity extends AppCompatActivity  {
                 Log.e(TAG, "onError: "+ anError.getErrorDetail());
             }
         });
-        toolbar = findViewById(R.id.toolbar);
-        viewPager = findViewById(R.id.viewPager);
-        tabLayout = findViewById(R.id.tabLayout);
-        setSupportActionBar(toolbar);
-
-        worldFragment = new WorldFragment();
-        countriesFragment = new CountriesFragment();
-        savedFragment = new SavedFragment();
-
-        tabLayout.setupWithViewPager(viewPager);
-        fragmentsinit();
-        fragmentTitlesinit();
-        ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
-        viewPager.setAdapter(adaptor);
-
     }
+
+    private void countriesNetworking(){
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+                .build().getAsObject(CountryResponse.class, new ParsedRequestListener<CountryResponse>() {
+            @Override
+            public void onResponse(CountryResponse response) {
+                Toast.makeText(MainActivity.this,"sucess2",Toast.LENGTH_SHORT).show();
+                NYBus.get().post(response.getResponse(), Channel.TWO);
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                showDialog();
+                Log.e(TAG, "onError: "+ anError.getErrorDetail());
+            }
+        });
+    }
+
 
     private void fragmentTitlesinit() {
         fragmentTitles = new ArrayList<>();
