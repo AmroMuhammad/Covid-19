@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.R;
@@ -29,7 +30,14 @@ import com.google.android.material.tabs.TabLayout;
 import com.mindorks.nybus.NYBus;
 import com.mindorks.nybus.event.Channel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity  {
     private SavedFragment savedFragment;
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +117,6 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
     }
-
 
     private void fragmentTitlesinit() {
         fragmentTitles = new ArrayList<>();
