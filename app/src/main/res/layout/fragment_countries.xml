@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".controller.fragments.CountriesFragment"
     android:orientation="vertical"
-    android:id="@+id/countriesFragment">
+    android:id="@+id/countriesFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
 

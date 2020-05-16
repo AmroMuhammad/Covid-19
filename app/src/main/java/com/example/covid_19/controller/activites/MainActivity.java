@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void worldNetworking(){
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
+                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
                 .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {
@@ -102,7 +103,8 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void countriesNetworking(){
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com").addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
+                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
                 .build().getAsObject(CountryResponse.class, new ParsedRequestListener<CountryResponse>() {
             @Override
             public void onResponse(CountryResponse response) {
