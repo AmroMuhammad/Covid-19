@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,13 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.covid_19.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.example.covid_19.controller.activites.CountryDetails;
 
-public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecyclerAdaptor.RecyclerHolder> {
+public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecyclerAdaptor.RecyclerHolder> implements Filterable {
     private List<String> countriesList;
+    private List<String> countriesListFull;
     private Context context;
     private List<HashMap<String,String>> countriesFlags;
 
@@ -30,6 +34,7 @@ public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecycler
         this.countriesList = countriesList;
         this.context = context;
         this.countriesFlags = countriesFlags;
+        this.countriesListFull = new ArrayList<>(countriesList);
     }
     @NonNull
     @Override
@@ -45,6 +50,8 @@ public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecycler
         holder.countryNameTV.setText(country);
         if(countryCode != null)
         Picasso.get().load("https://www.countryflags.io/"+countryCode+"/shiny/64.png").into(holder.countryFlagIV);
+        else
+            holder.countryFlagIV.setImageResource(R.drawable.worldwide);
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +78,39 @@ public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecycler
     public int getItemCount() {
         return countriesList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<String> filteredList = new ArrayList<>();
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(countriesListFull);
+            }
+            else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (String item:countriesListFull) {
+                    if(item.toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            countriesList.clear();
+            countriesList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     class RecyclerHolder extends RecyclerView.ViewHolder{
         private ImageView countryFlagIV;

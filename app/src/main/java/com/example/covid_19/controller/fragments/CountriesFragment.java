@@ -44,6 +44,7 @@ public class CountriesFragment extends Fragment {
     private List<String> responseList;
     private RecyclerView recyclerView;
     private ArrayList<HashMap<String, String>> formList;
+    private CountryRecyclerAdaptor adaptor;
 
     public CountriesFragment() {
         // Required empty public constructor
@@ -74,15 +75,28 @@ public class CountriesFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Search Country");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptor.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     @Subscribe(channelId = Channel.TWO)
     public void setCountryData(List<String> response){
         responseList = response;
-        recyclerView.setAdapter(new CountryRecyclerAdaptor(responseList,getContext(), loadCountriesFromJSON()));
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
+        adaptor = new CountryRecyclerAdaptor(responseList, getContext(), loadCountriesFromJSON());
+            recyclerView.setAdapter(adaptor);
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        }
 
-    }
 
     public ArrayList<HashMap<String,String>> loadCountriesFromJSON() {
         String json = null;
