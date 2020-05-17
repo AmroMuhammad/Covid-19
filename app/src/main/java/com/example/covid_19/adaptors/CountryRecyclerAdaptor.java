@@ -45,18 +45,23 @@ public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerHolder holder, int position) {
+        final Intent intent = new Intent(context,CountryDetails.class);
         final String country = countriesList.get(position);
+        String countryFlagURL = null;
         String countryCode = getCountryCode(country);
         holder.countryNameTV.setText(country);
-        if(countryCode != null)
-        Picasso.get().load("https://www.countryflags.io/"+countryCode+"/shiny/64.png").into(holder.countryFlagIV);
+        if(countryCode != null) {
+            countryFlagURL = "https://www.countryflags.io/" + countryCode + "/shiny/64.png";
+            Picasso.get().load(countryFlagURL).into(holder.countryFlagIV);
+            intent.putExtra("country Flag",countryFlagURL);
+        }
         else
             holder.countryFlagIV.setImageResource(R.drawable.worldwide);
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, holder.countryNameTV.getText(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context,CountryDetails.class);
+                //Intent intent = new Intent(context,CountryDetails.class);
                 intent.putExtra("country Name",country);
                 context.startActivity(intent);
             }
