@@ -12,20 +12,34 @@ import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19.R;
+import com.example.covid_19.model.worldPOJO.Response;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class CountryDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
-    TextView textView;
-    ImageView imageView;
+    private TextView dateTV;
+    private String newMonth;
+    ProgressBar progressBarWorld;
+    private TextView countryNameTV;
+    private ImageView countryFlagIV;
+    private TextView newTV;
+    private TextView activeTV;
+    private TextView criticalTV;
+    private TextView recoveredTV;
+    private TextView totalTV;
+    private TextView newDeathTV;
+    private TextView totalDeathTV;
+    private TextView timeTV;
     Bundle bundle;
-    String data;
-    String data2;
+    String recievedCountryName;
+    String recievedImageURL;
     Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +49,15 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Country Details");
         bundle = getIntent().getExtras();
-        data = bundle.getString("country Name");
-        data2 = bundle.getString("country Flag");
-        textView = findViewById(R.id.worldTV);
-        textView.setText(data);
-        imageView = findViewById(R.id.worldIconIV);
-        if(data2 !=null)
-        Picasso.get().load(data2).into(imageView);
+        recievedCountryName = bundle.getString("country Name");
+        recievedImageURL = bundle.getString("country Flag");
+        countryNameTV = findViewById(R.id.countryNameTV);
+        countryNameTV.setText(recievedCountryName);
+        countryFlagIV = findViewById(R.id.countryFlagIV);
+        if(recievedImageURL !=null)
+        Picasso.get().load(recievedImageURL).into(countryFlagIV);
         else
-            imageView.setImageResource(R.drawable.worldwide);
+            countryFlagIV.setImageResource(R.drawable.worldwide);
 
     }
 
@@ -55,11 +69,10 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)  {
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    Toast.makeText(CountryDetails.this, "a7aaaaa", Toast.LENGTH_SHORT).show();
                    showDatePickerDialog();
                     return false;
                 }

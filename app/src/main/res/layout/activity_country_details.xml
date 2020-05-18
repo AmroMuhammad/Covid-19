@@ -25,7 +25,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <ImageView
-            android:id="@+id/worldIconIV"
+            android:id="@+id/countryFlagIV"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="16dp"
@@ -36,30 +36,30 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/worldTV"
+            android:id="@+id/countryNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="2dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/worldIconIV"
+            android:layout_toRightOf="@+id/countryFlagIV"
             android:text="World"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toEndOf="@+id/worldIconIV"
+            app:layout_constraintStart_toEndOf="@+id/countryFlagIV"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/dateTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/worldIconIV"
+            android:layout_alignBottom="@+id/countryFlagIV"
             android:layout_marginStart="24dp"
-            android:layout_toRightOf="@+id/worldIconIV"
+            android:layout_toRightOf="@+id/countryFlagIV"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintStart_toEndOf="@+id/worldIconIV"
-            app:layout_constraintTop_toBottomOf="@+id/worldTV" />
+            app:layout_constraintStart_toEndOf="@+id/countryFlagIV"
+            app:layout_constraintTop_toBottomOf="@+id/countryNameTV" />
 
         <TextView
             android:id="@+id/timeTV"
@@ -67,10 +67,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/dateTV"
             android:layout_marginStart="24dp"
-            android:layout_toRightOf="@+id/worldIconIV"
+            android:layout_toRightOf="@+id/countryFlagIV"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintStart_toEndOf="@+id/worldIconIV"
+            app:layout_constraintStart_toEndOf="@+id/countryFlagIV"
             app:layout_constraintTop_toBottomOf="@+id/dateTV" />
 
         <ProgressBar
