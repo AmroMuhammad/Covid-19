@@ -5,10 +5,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.room.Room;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -29,12 +32,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
+import com.example.covid_19.model.countryDatabase.Country;
+import com.example.covid_19.model.countryDatabase.CountryDB;
 import com.example.covid_19.model.historyPOJO.HistoryResponse;
 import com.example.covid_19.model.historyPOJO.Response;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +46,6 @@ import java.util.List;
 public class CountryDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TextWatcher {
     private List<Response> historyResponse;
     private TextView dateTV;
-    private List<Response> favouriteList;
     String formattedDate;
     private TextView timeTV;
     private ProgressBar progressBarWorld;
@@ -60,7 +63,8 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     private String receivedImageURL;
     private Toolbar toolbar;
     private String time;
-    private ToggleButton favouriteButtonTB;
+    private ImageView favouriteIV;
+    private CountryDB database;
 
     private static final String TAG = "CountryDetails";
     @Override
@@ -73,13 +77,11 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Country Details");
 
-
         //data bundle from countries tab
         bundle = getIntent().getExtras();
         receivedCountryName = bundle.getString("country Name");
         receivedImageURL = bundle.getString("country Flag");
         getDate();
-
 
         //inflating views
         countryNameTV = findViewById(R.id.countryNameTV);
@@ -94,19 +96,28 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         totalTV=findViewById(R.id.totalNum_TV);
         newDeathTV=findViewById(R.id.newDeathNum_TV);
         totalDeathTV=findViewById(R.id.totalDeathNum_TV);
-        favouriteList = new ArrayList<>();
+        favouriteIV = findViewById(R.id.favouriteIV);
 
+        //initializing Database
+        database = Room.databaseBuilder(this,CountryDB.class,"CountryStatisticsDB").allowMainThreadQueries().build();
 
-        favouriteButtonTB =findViewById(R.id.favouriteTB);
-        favouriteButtonTB.setChecked(false);
-        favouriteButtonTB.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.offstar));
-        favouriteButtonTB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        //checking country in favourite list or not
+        if(isFavourite(receivedCountryName)){
+            favouriteIV.setImageResource(R.drawable.onstar);
+        }
+
+        favouriteIV.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    favouriteButtonTB.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.onstar));
-                else
-                    favouriteButtonTB.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.offstar));
+            public void onClick(View v) {
+                if (isFavourite(receivedCountryName)) {
+                    removeFromFavourite(receivedCountryName);
+                    favouriteIV.setImageResource(R.drawable.offstar);
+                    Toast.makeText(CountryDetails.this, "Removed from Saved Countries", Toast.LENGTH_SHORT).show();
+                } else {
+                    addToFavourtie(receivedCountryName);
+                    favouriteIV.setImageResource(R.drawable.onstar);
+                    Toast.makeText(CountryDetails.this, "added to Saved Countries", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -124,9 +135,32 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         progressBarWorld.setVisibility(View.VISIBLE);
         historyNetworking(receivedCountryName,formattedDate);
 
+        //detecting date
         dateTV.addTextChangedListener(this);
+
+
     }
 
+    private void removeFromFavourite(String receivedCountryName) {
+        Country country = new Country();
+        country.setCountryName(receivedCountryName);
+        database.countryDao().delete(country);
+    }
+
+    public boolean isFavourite(String receivedCountryName){
+        Country[] val = database.countryDao().search(receivedCountryName);
+        if(val.length > 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void addToFavourtie(String receivedCountryName){
+        Country country = new Country();
+        country.setCountryName(receivedCountryName);
+       long id = database.countryDao().insert(country);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -198,7 +232,6 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
             }
         });
     }
-
     private void showCountryHasNoHistoryAvailable() {
         new AlertDialog.Builder(this).setTitle("No Data Available").setMessage("Country Has No History Available").show();
     }

@@ -73,8 +73,8 @@
             app:layout_constraintStart_toEndOf="@+id/countryFlagIV"
             app:layout_constraintTop_toBottomOf="@+id/dateTV" />
 
-        <ToggleButton
-            android:id="@+id/favouriteTB"
+        <ImageView
+            android:id="@+id/favouriteIV"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerHorizontal="true"
@@ -83,14 +83,13 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="32dp"
-            android:textOff=""
-            android:textOn=""
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/countryNameTV"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.181" />
+            app:layout_constraintVertical_bias="0.181"
+            android:src="@drawable/offstar"/>
 
         <ProgressBar
             android:id="@+id/progressBarWorld"
