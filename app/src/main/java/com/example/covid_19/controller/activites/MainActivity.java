@@ -32,8 +32,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
 
-
-    private static final String TAG = "MainActivity";
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -48,6 +46,8 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //initializing android networking
+        AndroidNetworking.initialize(getApplicationContext());
 
 
         //inflating views
@@ -68,28 +68,8 @@ public class MainActivity extends AppCompatActivity  {
         ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
         viewPager.setAdapter(adaptor);
 
-        //initializing android networking
-        AndroidNetworking.initialize(getApplicationContext());
-        countriesNetworking();
     }
 
-    private void countriesNetworking(){
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
-                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
-                .build().getAsObject(CountryResponse.class, new ParsedRequestListener<CountryResponse>() {
-            @Override
-            public void onResponse(CountryResponse response) {
-                Toast.makeText(MainActivity.this,"sucess2",Toast.LENGTH_SHORT).show();
-                NYBus.get().post(response.getResponse(), Channel.TWO);
-            }
-
-            @Override
-            public void onError(ANError anError) {
-                //showDialog();
-                Log.e(TAG, "onError: "+ anError.getErrorDetail());
-            }
-        });
-    }
 
     private void fragmentTitlesinit() {
         fragmentTitles = new ArrayList<>();
@@ -105,21 +85,6 @@ public class MainActivity extends AppCompatActivity  {
         fragments.add(savedFragment);
     }
 
-       private void showDialog(){
-            new AlertDialog.Builder(this).setTitle("Network Error").setCancelable(false).setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
 
-                }
-            }).show();
-    }
 
 }

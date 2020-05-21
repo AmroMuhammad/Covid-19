@@ -1,9 +1,12 @@
 package com.example.covid_19.controller.fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -20,9 +23,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
 import com.example.covid_19.adaptors.CountryRecyclerAdaptor;
 import com.example.covid_19.controller.activites.MainActivity;
+import com.example.covid_19.model.countriesPOJO.CountryResponse;
 import com.mindorks.nybus.NYBus;
 import com.mindorks.nybus.annotation.Subscribe;
 import com.mindorks.nybus.event.Channel;
@@ -42,6 +49,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CountriesFragment extends Fragment {
+    private static final String TAG = "Countries Fragment";
     private List<String> responseList;
     private RecyclerView recyclerView;
     private ArrayList<HashMap<String, String>> formList;
@@ -63,9 +71,8 @@ public class CountriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NYBus.get().register(this, Channel.TWO);
         recyclerView = view.findViewById(R.id.recyclerView);
-
+        countriesNetworking();
 
     }
 
@@ -91,7 +98,6 @@ public class CountriesFragment extends Fragment {
         });
     }
 
-    @Subscribe(channelId = Channel.TWO)
     public void setCountryData(List<String> response){
         responseList = response;
         adaptor = new CountryRecyclerAdaptor(responseList, getContext(), loadCountriesFromJSON());
@@ -99,6 +105,41 @@ public class CountriesFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         }
 
+
+    private void countriesNetworking(){
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
+                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+                .build().getAsObject(CountryResponse.class, new ParsedRequestListener<CountryResponse>() {
+            @Override
+            public void onResponse(CountryResponse response) {
+                Toast.makeText(getContext(),"sucess2",Toast.LENGTH_SHORT).show();
+                setCountryData(response.getResponse());
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                showDialog();
+                Log.e(TAG, "onError: "+ anError.getErrorDetail());
+            }
+        });
+    }
+
+    private void showDialog(){
+        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = getActivity().getIntent();
+                getActivity().finish();
+                startActivity(intent);
+            }
+        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+
+            }
+        }).show();
+    }
 
     public ArrayList<HashMap<String,String>> loadCountriesFromJSON() {
         String json = null;
