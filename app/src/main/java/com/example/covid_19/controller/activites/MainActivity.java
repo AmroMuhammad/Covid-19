@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity  {
     private SavedFragment savedFragment;
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
-
+    private  ViewPagerAdaptor adaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity  {
         tabLayout.setupWithViewPager(viewPager);
         fragmentsinit();
         fragmentTitlesinit();
-        ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
+        adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
         viewPager.setAdapter(adaptor);
     }
 

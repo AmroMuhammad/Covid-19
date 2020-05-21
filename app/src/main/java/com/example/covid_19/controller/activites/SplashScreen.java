@@ -11,7 +11,7 @@ import com.example.covid_19.R;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private static int SPLASH_SCREEN_TIME_OUT=3000;
+    private static int SPLASH_SCREEN_TIME_OUT=2600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

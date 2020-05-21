@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,14 +18,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -42,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CountryDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TextWatcher {
     private List<Response> historyResponse;
@@ -65,6 +62,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     private String time;
     private ImageView favouriteIV;
     private CountryDB database;
+    private boolean check;
 
     private static final String TAG = "CountryDetails";
     @Override
@@ -99,23 +97,36 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         favouriteIV = findViewById(R.id.favouriteIV);
 
         //initializing Database
-        database = Room.databaseBuilder(this,CountryDB.class,"CountryStatisticsDB").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(this,CountryDB.class,"CountryStatisticsDB").build();
+
         //checking country in favourite list or not
-        if(isFavourite(receivedCountryName)){
-            favouriteIV.setImageResource(R.drawable.onstar);
+        try {
+            if(isFavourite()){
+                favouriteIV.setImageResource(R.drawable.onstar);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         favouriteIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFavourite(receivedCountryName)) {
-                    removeFromFavourite(receivedCountryName);
-                    favouriteIV.setImageResource(R.drawable.offstar);
-                    Toast.makeText(CountryDetails.this, "Removed from Saved Countries", Toast.LENGTH_SHORT).show();
-                } else {
-                    addToFavourtie(receivedCountryName);
-                    favouriteIV.setImageResource(R.drawable.onstar);
-                    Toast.makeText(CountryDetails.this, "added to Saved Countries", Toast.LENGTH_SHORT).show();
+                try {
+                    if (isFavourite()) {
+                        removeFromFavourite(receivedCountryName);
+                        favouriteIV.setImageResource(R.drawable.offstar);
+                        Toast.makeText(CountryDetails.this, "Removed from Saved Countries", Toast.LENGTH_SHORT).show();
+                    } else {
+                        addToFavourite(receivedCountryName);
+                        favouriteIV.setImageResource(R.drawable.onstar);
+                        Toast.makeText(CountryDetails.this, "added to Saved Countries", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -141,25 +152,33 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     }
 
     private void removeFromFavourite(String receivedCountryName) {
-        Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
+        final Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
                 newTV.getText().toString(),activeTV.getText().toString(),criticalTV.getText().toString(),recoveredTV.getText().toString(),
                 totalTV.getText().toString(),newDeathTV.getText().toString(),totalDeathTV.getText().toString(),receivedImageURL);
-        database.countryDao().delete(country);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                database.countryDao().delete(country);
+
+            }
+        }).start();
     }
 
-    public boolean isFavourite(String receivedCountryName){
-        Country[] val = database.countryDao().search(receivedCountryName);
-        if(val.length > 0)
-            return true;
-        else
-            return false;
+    public boolean isFavourite() throws ExecutionException, InterruptedException {
+        FavouriteInBackground favouriteInBackground = new FavouriteInBackground();
+        return favouriteInBackground.execute().get();
     }
 
-    public void addToFavourtie(String receivedCountryName){
-        Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
+    public void addToFavourite(String receivedCountryName){
+        final Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
                 newTV.getText().toString(),activeTV.getText().toString(),criticalTV.getText().toString(),recoveredTV.getText().toString(),
                 totalTV.getText().toString(),newDeathTV.getText().toString(),totalDeathTV.getText().toString(),receivedImageURL);
-        long id = database.countryDao().insert(country);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long id = database.countryDao().insert(country);
+            }
+        }).start();
     }
 
     @Override
@@ -229,7 +248,13 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     }
 
     private void showCountryHasNoHistoryAvailable() {
-        new AlertDialog.Builder(this).setTitle("No Data Available").setMessage("Country Has No Data Available").show();
+        new AlertDialog.Builder(this).setCancelable(true).setTitle("No Data Available").setMessage("You Entered a wrong date")
+                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).show();
     }
 
     private void setDataToViews(int i) {
@@ -290,5 +315,22 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
 
     @Override
     public void afterTextChanged(Editable s) {
+    }
+
+    private class FavouriteInBackground extends AsyncTask<Void,Void,Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Country[] val = database.countryDao().search(receivedCountryName);
+            if(val.length > 0)
+                return true;
+            else
+                return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+        }
     }
 }
