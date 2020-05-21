@@ -1,17 +1,17 @@
 package com.example.covid_19.controller.activites;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.covid_19.R;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private static int SPLASH_SCREEN_TIME_OUT=2600;
+    private static int SPLASH_SCREEN_TIME_OUT = 2600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i=new Intent(SplashScreen.this,
+                Intent i = new Intent(SplashScreen.this,
                         MainActivity.class);
                 //Intent is used to switch from one activity to another.
 

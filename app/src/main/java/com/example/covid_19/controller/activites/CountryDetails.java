@@ -1,11 +1,5 @@
 package com.example.covid_19.controller.activites;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.room.Room;
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.room.Room;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
@@ -41,9 +41,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CountryDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TextWatcher {
+    private static final String TAG = "CountryDetails";
+    String formattedDate;
     private List<Response> historyResponse;
     private TextView dateTV;
-    String formattedDate;
     private TextView timeTV;
     private ProgressBar progressBarWorld;
     private TextView countryNameTV;
@@ -62,9 +63,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     private String time;
     private ImageView favouriteIV;
     private CountryDB database;
-    private boolean check;
 
-    private static final String TAG = "CountryDetails";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +73,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Country Details");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //data bundle from countries tab
         bundle = getIntent().getExtras();
@@ -190,6 +190,10 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)  {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        else
         showDatePickerDialog();
         return super.onOptionsItemSelected(item);
     }
@@ -217,7 +221,6 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         else
             this.formattedDate = year + "-" + month + "-" + dayOfMonth;
         dateTV.setText(formattedDate);
-        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
     }
 
     private void historyNetworking(String countryName,String date){
@@ -227,7 +230,6 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
             @Override
             public void onResponse(HistoryResponse response) {
                 progressBarWorld.setVisibility(View.GONE);
-                Toast.makeText(CountryDetails.this,"success3" ,Toast.LENGTH_SHORT).show();
                 historyResponse = response.getResponse();
                 if(historyResponse.size() != 0) {
                     int i = historyResponse.size() - 1;

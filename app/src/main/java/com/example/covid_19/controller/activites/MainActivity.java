@@ -1,25 +1,24 @@
 package com.example.covid_19.controller.activites;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-
 import com.androidnetworking.AndroidNetworking;
-
-import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.R;
+import com.example.covid_19.adaptors.ViewPagerAdaptor;
+import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.controller.fragments.SavedFragment;
 import com.example.covid_19.controller.fragments.WorldFragment;
-import com.example.covid_19.adaptors.ViewPagerAdaptor;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ViewPager viewPager;
@@ -29,7 +28,8 @@ public class MainActivity extends AppCompatActivity  {
     private SavedFragment savedFragment;
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
-    private  ViewPagerAdaptor adaptor;
+    private ViewPagerAdaptor adaptor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity  {
         tabLayout.setupWithViewPager(viewPager);
         fragmentsinit();
         fragmentTitlesinit();
-        adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
+        adaptor = new ViewPagerAdaptor(getSupportFragmentManager(), 0, fragments, fragmentTitles);
         viewPager.setAdapter(adaptor);
 
     }

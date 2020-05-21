@@ -1,6 +1,5 @@
 package com.example.covid_19.controller.fragments;
 
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,22 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
-import com.example.covid_19.controller.activites.MainActivity;
 import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.example.covid_19.model.worldPOJO.Response;
-
 
 import java.util.List;
 
@@ -34,10 +29,10 @@ import java.util.List;
  */
 public class WorldFragment extends Fragment {
     private static final String TAG = "WorldFragment";
+    ProgressBar progressBarWorld;
     private List<Response> responseList;
     private TextView dateTV;
     private String newMonth;
-    ProgressBar progressBarWorld;
     private TextView newTV;
     private TextView activeTV;
     private TextView criticalTV;

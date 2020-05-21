@@ -3,6 +3,14 @@ package com.example.covid_19.controller.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,25 +20,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
 import com.example.covid_19.adaptors.CountryRecyclerAdaptor;
-import com.example.covid_19.controller.activites.MainActivity;
 import com.example.covid_19.model.countriesPOJO.CountryResponse;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +72,7 @@ public class CountriesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.country_menu,menu);
+        inflater.inflate(R.menu.country_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -96,33 +91,32 @@ public class CountriesFragment extends Fragment {
         });
     }
 
-    public void setCountryData(List<String> response){
+    public void setCountryData(List<String> response) {
         responseList = response;
         adaptor = new CountryRecyclerAdaptor(responseList, getContext(), loadCountriesFromJSON());
-            recyclerView.setAdapter(adaptor);
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        }
+        recyclerView.setAdapter(adaptor);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+    }
 
 
-    private void countriesNetworking(){
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
-                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+    private void countriesNetworking() {
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/countries").addHeaders("x-rapidapi-host", "covid-193.p.rapidapi.com")
+                .addHeaders("x-rapidapi-key", "8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
                 .build().getAsObject(CountryResponse.class, new ParsedRequestListener<CountryResponse>() {
             @Override
             public void onResponse(CountryResponse response) {
-                Toast.makeText(getContext(),"sucess2",Toast.LENGTH_SHORT).show();
                 setCountryData(response.getResponse());
             }
 
             @Override
             public void onError(ANError anError) {
                 showDialog();
-                Log.e(TAG, "onError: "+ anError.getErrorDetail());
+                Log.e(TAG, "onError: " + anError.getErrorDetail());
             }
         });
     }
 
-    private void showDialog(){
+    private void showDialog() {
         new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -139,7 +133,7 @@ public class CountriesFragment extends Fragment {
         }).show();
     }
 
-    public ArrayList<HashMap<String,String>> loadCountriesFromJSON() {
+    public ArrayList<HashMap<String, String>> loadCountriesFromJSON() {
         String json = null;
         try {
             InputStream is = getContext().getAssets().open("country.json");

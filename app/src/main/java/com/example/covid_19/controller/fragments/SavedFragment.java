@@ -1,25 +1,18 @@
 package com.example.covid_19.controller.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Database;
 import androidx.room.Room;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
 import com.example.covid_19.R;
-import com.example.covid_19.adaptors.CountryRecyclerAdaptor;
 import com.example.covid_19.adaptors.SavedRecyclerAdaptor;
 import com.example.covid_19.model.countryDatabase.Country;
 import com.example.covid_19.model.countryDatabase.CountryDB;
@@ -54,22 +47,22 @@ public class SavedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        database = Room.databaseBuilder(getContext(),CountryDB.class,"CountryStatisticsDB").build();
+        database = Room.databaseBuilder(getContext(), CountryDB.class, "CountryStatisticsDB").build();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 savedList = database.countryDao().getAll();
 
-               getActivity().runOnUiThread(new Runnable() {
-                   @Override
-                   public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                       adaptor = new SavedRecyclerAdaptor(savedList, getContext());
-                       recyclerView.setAdapter(adaptor);
-                       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                   }
-               });
+                        adaptor = new SavedRecyclerAdaptor(savedList, getContext());
+                        recyclerView.setAdapter(adaptor);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    }
+                });
             }
         }).start();
 

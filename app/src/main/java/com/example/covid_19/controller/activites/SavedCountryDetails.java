@@ -1,22 +1,19 @@
 package com.example.covid_19.controller.activites;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.room.Room;
-
-import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.covid_19.R;
 import com.example.covid_19.model.countryDatabase.Country;
 import com.example.covid_19.model.countryDatabase.CountryDB;
-import com.example.covid_19.model.historyPOJO.Response;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class SavedCountryDetails extends AppCompatActivity {
 
@@ -43,13 +40,14 @@ public class SavedCountryDetails extends AppCompatActivity {
         setContentView(R.layout.activity_saved_country_details);
 
         //receiving intent data
-        Country country =getIntent().getExtras().getParcelable("countryData");
+        Country country = getIntent().getExtras().getParcelable("countryData");
 
         //setting toolbar
         //Toolbar initialization
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Saved Country Details");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //inflating views
         countryNameTV = findViewById(R.id.countryNameTV);
@@ -57,12 +55,12 @@ public class SavedCountryDetails extends AppCompatActivity {
         timeTV = findViewById(R.id.timeTV);
         countryFlagIV = findViewById(R.id.countryFlagIV);
         newTV = findViewById(R.id.newNum_TV);
-        activeTV=findViewById(R.id.activeNum_TV);
-        criticalTV=findViewById(R.id.criticalNum_TV);
-        recoveredTV=findViewById(R.id.recoveredNum_TV);
-        totalTV=findViewById(R.id.totalNum_TV);
-        newDeathTV=findViewById(R.id.newDeathNum_TV);
-        totalDeathTV=findViewById(R.id.totalDeathNum_TV);
+        activeTV = findViewById(R.id.activeNum_TV);
+        criticalTV = findViewById(R.id.criticalNum_TV);
+        recoveredTV = findViewById(R.id.recoveredNum_TV);
+        totalTV = findViewById(R.id.totalNum_TV);
+        newDeathTV = findViewById(R.id.newDeathNum_TV);
+        totalDeathTV = findViewById(R.id.totalDeathNum_TV);
 
         //Setting data to views
         countryNameTV.setText(country.getCountryName());
@@ -80,15 +78,19 @@ public class SavedCountryDetails extends AppCompatActivity {
         flagURL = bundle.getString("flagURL");
 
         //Image Caching
-        if(flagURL != null) {
+        if (flagURL != null) {
             Picasso.get()
                     .load(flagURL)
                     .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(countryFlagIV);
-        }
-        else
+        } else
             countryFlagIV.setImageResource(R.drawable.worldwide);
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home)
+            finish();
+        return super.onOptionsItemSelected(item);
+    }
 }
