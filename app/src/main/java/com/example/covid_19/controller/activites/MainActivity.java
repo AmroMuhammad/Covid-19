@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
 
         //initializing fragments
+        savedFragment = new SavedFragment();
         worldFragment = new WorldFragment();
         countriesFragment = new CountriesFragment();
-        savedFragment = new SavedFragment();
 
         //initializing viewPager
         tabLayout.setupWithViewPager(viewPager);
@@ -56,8 +56,14 @@ public class MainActivity extends AppCompatActivity  {
         fragmentTitlesinit();
         adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
         viewPager.setAdapter(adaptor);
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
 
     private void fragmentTitlesinit() {
         fragmentTitles = new ArrayList<>();
