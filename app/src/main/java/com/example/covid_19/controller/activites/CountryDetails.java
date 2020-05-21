@@ -100,7 +100,6 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
 
         //initializing Database
         database = Room.databaseBuilder(this,CountryDB.class,"CountryStatisticsDB").allowMainThreadQueries().build();
-
         //checking country in favourite list or not
         if(isFavourite(receivedCountryName)){
             favouriteIV.setImageResource(R.drawable.onstar);
@@ -142,8 +141,9 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     }
 
     private void removeFromFavourite(String receivedCountryName) {
-        Country country = new Country();
-        country.setCountryName(receivedCountryName);
+        Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
+                newTV.getText().toString(),activeTV.getText().toString(),criticalTV.getText().toString(),recoveredTV.getText().toString(),
+                totalTV.getText().toString(),newDeathTV.getText().toString(),totalDeathTV.getText().toString(),receivedImageURL);
         database.countryDao().delete(country);
     }
 
@@ -156,11 +156,12 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     }
 
     public void addToFavourtie(String receivedCountryName){
-        Country country = new Country();
-        country.setCountryName(receivedCountryName);
-       long id = database.countryDao().insert(country);
+        Country country = new Country(receivedCountryName,dateTV.getText().toString(),timeTV.getText().toString(),
+                newTV.getText().toString(),activeTV.getText().toString(),criticalTV.getText().toString(),recoveredTV.getText().toString(),
+                totalTV.getText().toString(),newDeathTV.getText().toString(),totalDeathTV.getText().toString(),receivedImageURL);
+        long id = database.countryDao().insert(country);
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -232,8 +233,9 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
             }
         });
     }
+
     private void showCountryHasNoHistoryAvailable() {
-        new AlertDialog.Builder(this).setTitle("No Data Available").setMessage("Country Has No History Available").show();
+        new AlertDialog.Builder(this).setTitle("No Data Available").setMessage("Country Has No Data Available").show();
     }
 
     private void setDataToViews(int i) {

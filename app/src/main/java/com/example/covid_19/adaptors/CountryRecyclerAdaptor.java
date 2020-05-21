@@ -61,7 +61,6 @@ public class CountryRecyclerAdaptor extends RecyclerView.Adapter<CountryRecycler
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, holder.countryNameTV.getText(), Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(context,CountryDetails.class);
                 intent.putExtra("country Name",country);
                 context.startActivity(intent);
             }

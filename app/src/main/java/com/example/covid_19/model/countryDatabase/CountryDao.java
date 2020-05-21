@@ -21,4 +21,7 @@ public interface CountryDao {
 
     @Query("SELECT * FROM Country")
     List<Country> getAll();
+
+    @Query("DELETE FROM Country")
+    void clear();
 }
