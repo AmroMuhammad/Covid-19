@@ -1,17 +1,29 @@
 package com.example.covid_19.controller.fragments;
 
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
+import com.example.covid_19.controller.activites.MainActivity;
+import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.example.covid_19.model.worldPOJO.Response;
 import com.mindorks.nybus.NYBus;
 import com.mindorks.nybus.annotation.Subscribe;
@@ -23,6 +35,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class WorldFragment extends Fragment {
+    private static final String TAG = "WorldFragment";
     private List<Response> responseList;
     private TextView dateTV;
     private String newMonth;
@@ -50,8 +63,8 @@ public class WorldFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        NYBus.get().register(this, Channel.ONE);
         super.onViewCreated(view, savedInstanceState);
+
         dateTV = view.findViewById(R.id.dateTV);
         timeTV= view.findViewById(R.id.timeTV);
         newTV = view.findViewById(R.id.newNum_TV);
@@ -63,9 +76,12 @@ public class WorldFragment extends Fragment {
         totalDeathTV = view.findViewById(R.id.totalDeathNum_TV);
         progressBarWorld = view.findViewById(R.id.progressBarWorld);
         progressBarWorld.setVisibility(View.VISIBLE);
+
+        worldNetworking();
+
+
     }
 
-    @Subscribe(channelId = Channel.ONE)
     public void setData(List<Response> responses) {
         responseList = responses;
         String oldDate = String.valueOf(responseList.get(189).getDay());
@@ -83,7 +99,42 @@ public class WorldFragment extends Fragment {
         progressBarWorld.setVisibility(View.GONE);
     }
 
-    private String reverseDate(String date) {
+    private void worldNetworking(){
+        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
+                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+                .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
+            @Override
+            public void onResponse(APIResponse response) {
+                Toast.makeText(getContext(),"success" ,Toast.LENGTH_SHORT).show();
+                setData(response.getResponse());
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                showDialog();
+               Log.e(TAG, "onError: "+ anError.getErrorDetail());
+            }
+        });
+    }
+
+    private void showDialog(){
+        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = getActivity().getIntent();
+                getActivity().finish();
+                startActivity(intent);
+            }
+        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+
+            }
+        }).show();
+    }
+
+        private String reverseDate(String date) {
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "Septmeber", "October", "November", "December"};
         String rightDate;
         // String newMonth;

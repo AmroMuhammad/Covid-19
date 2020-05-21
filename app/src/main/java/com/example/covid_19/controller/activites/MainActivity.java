@@ -10,14 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.R;
@@ -30,14 +27,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.mindorks.nybus.NYBus;
 import com.mindorks.nybus.event.Channel;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
@@ -53,16 +43,12 @@ public class MainActivity extends AppCompatActivity  {
     private List<Fragment> fragments;
     private List<String> fragmentTitles;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initializing android networking
-        AndroidNetworking.initialize(getApplicationContext());
-        worldNetworking();
-        countriesNetworking();
+
 
         //inflating views
         toolbar = findViewById(R.id.toolbar);
@@ -82,24 +68,9 @@ public class MainActivity extends AppCompatActivity  {
         ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
         viewPager.setAdapter(adaptor);
 
-    }
-
-    private void worldNetworking(){
-        AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
-                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
-                .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
-            @Override
-            public void onResponse(APIResponse response) {
-                Toast.makeText(MainActivity.this,"success" ,Toast.LENGTH_SHORT).show();
-                NYBus.get().post(response.getResponse(), Channel.ONE);
-            }
-
-            @Override
-            public void onError(ANError anError) {
-                showDialog();
-                Log.e(TAG, "onError: "+ anError.getErrorDetail());
-            }
-        });
+        //initializing android networking
+        AndroidNetworking.initialize(getApplicationContext());
+        countriesNetworking();
     }
 
     private void countriesNetworking(){
@@ -114,7 +85,7 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onError(ANError anError) {
-                showDialog();
+                //showDialog();
                 Log.e(TAG, "onError: "+ anError.getErrorDetail());
             }
         });
