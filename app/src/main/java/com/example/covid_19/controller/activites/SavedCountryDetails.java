@@ -42,9 +42,6 @@ public class SavedCountryDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_country_details);
 
-        //intialize database
-        database = Room.databaseBuilder(this,CountryDB.class,"CountryStatisticsDB").allowMainThreadQueries().build();
-
         //receiving intent data
         Country country =getIntent().getExtras().getParcelable("countryData");
 

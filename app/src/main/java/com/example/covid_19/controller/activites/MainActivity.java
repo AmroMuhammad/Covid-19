@@ -1,31 +1,20 @@
 package com.example.covid_19.controller.activites;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
 
-import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.controller.fragments.CountriesFragment;
 import com.example.covid_19.R;
 import com.example.covid_19.controller.fragments.SavedFragment;
 import com.example.covid_19.controller.fragments.WorldFragment;
 import com.example.covid_19.adaptors.ViewPagerAdaptor;
-import com.example.covid_19.model.countriesPOJO.CountryResponse;
-import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.google.android.material.tabs.TabLayout;
-import com.mindorks.nybus.NYBus;
-import com.mindorks.nybus.event.Channel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +56,6 @@ public class MainActivity extends AppCompatActivity  {
         fragmentTitlesinit();
         ViewPagerAdaptor adaptor = new ViewPagerAdaptor(getSupportFragmentManager(),0,fragments,fragmentTitles);
         viewPager.setAdapter(adaptor);
-
     }
 
 
@@ -84,7 +72,5 @@ public class MainActivity extends AppCompatActivity  {
         fragments.add(countriesFragment);
         fragments.add(savedFragment);
     }
-
-
 
 }

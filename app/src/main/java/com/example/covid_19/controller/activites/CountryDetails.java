@@ -171,13 +171,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)  {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                   showDatePickerDialog();
-                    return false;
-                }
-            });
+        showDatePickerDialog();
         return super.onOptionsItemSelected(item);
     }
 

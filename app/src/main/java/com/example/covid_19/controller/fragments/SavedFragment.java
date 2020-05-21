@@ -1,5 +1,6 @@
 package com.example.covid_19.controller.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -51,10 +52,25 @@ public class SavedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
-        database = Room.databaseBuilder(getContext(),CountryDB.class,"CountryStatisticsDB").allowMainThreadQueries().build();
-        savedList = database.countryDao().getAll();
-        adaptor = new SavedRecyclerAdaptor(savedList, getContext());
-        recyclerView.setAdapter(adaptor);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        database = Room.databaseBuilder(getContext(),CountryDB.class,"CountryStatisticsDB").build();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                savedList = database.countryDao().getAll();
+
+               getActivity().runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+
+                       adaptor = new SavedRecyclerAdaptor(savedList, getContext());
+                       recyclerView.setAdapter(adaptor);
+                       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                   }
+               });
+            }
+        }).start();
+
+
     }
 }

@@ -25,9 +25,7 @@ import com.example.covid_19.R;
 import com.example.covid_19.controller.activites.MainActivity;
 import com.example.covid_19.model.worldPOJO.APIResponse;
 import com.example.covid_19.model.worldPOJO.Response;
-import com.mindorks.nybus.NYBus;
-import com.mindorks.nybus.annotation.Subscribe;
-import com.mindorks.nybus.event.Channel;
+
 
 import java.util.List;
 
@@ -105,7 +103,6 @@ public class WorldFragment extends Fragment {
                 .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {
-                Toast.makeText(getContext(),"success" ,Toast.LENGTH_SHORT).show();
                 setData(response.getResponse());
             }
 

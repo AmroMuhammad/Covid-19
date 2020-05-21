@@ -30,9 +30,7 @@ import com.example.covid_19.R;
 import com.example.covid_19.adaptors.CountryRecyclerAdaptor;
 import com.example.covid_19.controller.activites.MainActivity;
 import com.example.covid_19.model.countriesPOJO.CountryResponse;
-import com.mindorks.nybus.NYBus;
-import com.mindorks.nybus.annotation.Subscribe;
-import com.mindorks.nybus.event.Channel;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
