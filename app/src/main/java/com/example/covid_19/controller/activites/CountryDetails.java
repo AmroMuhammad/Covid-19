@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.room.Room;
 
 import com.androidnetworking.AndroidNetworking;
@@ -212,7 +213,9 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         month = month+1;
-        if(dayOfMonth<10 && month<10)
+        if(Integer.valueOf(formattedDate.substring(8,10) )< dayOfMonth)
+            showCountryHasNoHistoryAvailable();
+        else if(dayOfMonth<10 && month<10)
             this.formattedDate = year + "-0" + month + "-0" + dayOfMonth;
         else if(dayOfMonth<10)
             this.formattedDate = year+"-"+month+"-0"+dayOfMonth;
@@ -236,7 +239,8 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
                     setDataToViews(i);
                 }
                 else{
-                    showCountryHasNoHistoryAvailable();
+                    //data is updating try again later
+                    showDataUpdating();
                 }
             }
 
@@ -249,14 +253,24 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
         });
     }
 
-    private void showCountryHasNoHistoryAvailable() {
-        new AlertDialog.Builder(this).setCancelable(true).setTitle("No Data Available").setMessage("You Entered a wrong date")
+    private void showDataUpdating() {
+        new AlertDialog.Builder(this).setCancelable(false).setTitle("No Data Available").setMessage("Data is updating try again later")
                 .setPositiveButton("Back", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         }).show();
+    }
+
+    private void showCountryHasNoHistoryAvailable() {
+        new AlertDialog.Builder(this).setCancelable(true).setTitle("No Data Available").setMessage("You entered a wrong date")
+                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).show();
     }
 
     private void setDataToViews(int i) {
