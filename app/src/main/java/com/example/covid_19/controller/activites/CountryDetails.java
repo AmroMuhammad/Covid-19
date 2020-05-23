@@ -213,7 +213,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         month = month+1;
-        if(Integer.valueOf(formattedDate.substring(8,10) )< dayOfMonth)
+        if(Integer.valueOf(formattedDate.substring(8,10) )< dayOfMonth || Integer.valueOf(formattedDate.substring(5,7) ) < month)
             showCountryHasNoHistoryAvailable();
         else if(dayOfMonth<10 && month<10)
             this.formattedDate = year + "-0" + month + "-0" + dayOfMonth;
