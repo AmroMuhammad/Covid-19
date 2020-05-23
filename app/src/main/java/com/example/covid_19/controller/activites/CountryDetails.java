@@ -214,7 +214,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         month = month+1;
         if(Integer.valueOf(formattedDate.substring(8,10) )< dayOfMonth || Integer.valueOf(formattedDate.substring(5,7) ) < month)
-            showCountryHasNoHistoryAvailable();
+            showCountryHasNoHistoryAvailableOrShowDataUpdating("You entered a wrong date",true);
         else if(dayOfMonth<10 && month<10)
             this.formattedDate = year + "-0" + month + "-0" + dayOfMonth;
         else if(dayOfMonth<10)
@@ -240,7 +240,7 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
                 }
                 else{
                     //data is updating try again later
-                    showDataUpdating();
+                    showCountryHasNoHistoryAvailableOrShowDataUpdating("Data is updating try again later",false);
                 }
             }
 
@@ -252,19 +252,10 @@ public class CountryDetails extends AppCompatActivity implements DatePickerDialo
             }
         });
     }
+    
 
-    private void showDataUpdating() {
-        new AlertDialog.Builder(this).setCancelable(false).setTitle("No Data Available").setMessage("Data is updating try again later")
-                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).show();
-    }
-
-    private void showCountryHasNoHistoryAvailable() {
-        new AlertDialog.Builder(this).setCancelable(true).setTitle("No Data Available").setMessage("You entered a wrong date")
+    private void showCountryHasNoHistoryAvailableOrShowDataUpdating(String message, boolean isCancellable) {
+        new AlertDialog.Builder(this).setCancelable(isCancellable).setTitle("No Data Available").setMessage(message)
                 .setPositiveButton("Back", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
