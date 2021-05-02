@@ -20,7 +20,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.example.covid_19.R;
 import com.example.covid_19.model.worldPOJO.APIResponse;
-import com.example.covid_19.model.worldPOJO.Response;
+import com.example.covid_19.model.worldPOJO.ResponseItem;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import java.util.List;
 public class WorldFragment extends Fragment {
     private static final String TAG = "WorldFragment";
     ProgressBar progressBarWorld;
-    private List<Response> responseList;
+    private List<ResponseItem> responseList;
     private TextView dateTV;
     private String newMonth;
     private TextView newTV;
@@ -75,26 +75,26 @@ public class WorldFragment extends Fragment {
 
     }
 
-    public void setData(List<Response> responses) {
+    public void setData(List<ResponseItem> responses) {
         responseList = responses;
-        String oldDate = String.valueOf(responseList.get(189).getDay());
-        String time = String.valueOf(responseList.get(189).getTime());
+        String oldDate = String.valueOf(responseList.get(0).getDay());
+        String time = String.valueOf(responseList.get(0).getTime());
         time = "Last Updated "+time.substring(11,19) + " GMT";
         dateTV.setText(reverseDate(oldDate));
         timeTV.setText(time);
-        newTV.setText(responseList.get(189).getCases().getNew());
-        activeTV.setText(responseList.get(189).getCases().getActive().toString());
-        criticalTV.setText(responseList.get(189).getCases().getCritical().toString());
-        recoveredTV.setText(responseList.get(189).getCases().getRecovered().toString());
-        totalTV.setText(responseList.get(189).getCases().getTotal().toString());
-        newDeathTV.setText(responseList.get(189).getDeaths().getNew());
-        totalDeathTV.setText(responseList.get(189).getDeaths().getTotal().toString());
+        newTV.setText(responseList.get(0).getCases().getJsonMemberNew());
+        activeTV.setText(responseList.get(0).getCases().getActive()+"");
+        criticalTV.setText(responseList.get(0).getCases().getCritical()+"");
+        recoveredTV.setText(responseList.get(0).getCases().getRecovered()+"");
+        totalTV.setText(responseList.get(0).getCases().getTotal()+"");
+        newDeathTV.setText(responseList.get(0).getDeaths().getJsonMemberNew());
+        totalDeathTV.setText(responseList.get(0).getDeaths().getTotal()+"");
         progressBarWorld.setVisibility(View.GONE);
     }
 
     private void worldNetworking(){
         AndroidNetworking.get("https://covid-193.p.rapidapi.com/statistics").addHeaders("x-rapidapi-host","covid-193.p.rapidapi.com")
-                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a")
+                .addHeaders("x-rapidapi-key","8e7aa5120dmshad49bc24f64c127p15c72cjsncd6aef60585a").addQueryParameter("country","all")
                 .build().getAsObject(APIResponse.class, new ParsedRequestListener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {

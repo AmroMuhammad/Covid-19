@@ -1,30 +1,39 @@
-
 package com.example.covid_19.model.worldPOJO;
 
 import com.google.gson.annotations.SerializedName;
 
-@SuppressWarnings("unused")
-public class Deaths {
+public class Deaths{
 
-    @SerializedName("new")
-    private String mNew;
-    @SerializedName("total")
-    private Long mTotal;
+	@SerializedName("new")
+	private String jsonMemberNew;
 
-    public String getNew() {
-        return mNew;
-    }
+	@SerializedName("total")
+	private int total;
 
-    public void setNew(String nnew) {
-        mNew = nnew;
-    }
+	@SerializedName("1M_pop")
+	private String jsonMember1MPop;
 
-    public Long getTotal() {
-        return mTotal;
-    }
+	public void setJsonMemberNew(String jsonMemberNew){
+		this.jsonMemberNew = jsonMemberNew;
+	}
 
-    public void setTotal(Long total) {
-        mTotal = total;
-    }
+	public String getJsonMemberNew(){
+		return jsonMemberNew;
+	}
 
+	public void setTotal(int total){
+		this.total = total;
+	}
+
+	public int getTotal(){
+		return total;
+	}
+
+	public void setJsonMember1MPop(String jsonMember1MPop){
+		this.jsonMember1MPop = jsonMember1MPop;
+	}
+
+	public String getJsonMember1MPop(){
+		return jsonMember1MPop;
+	}
 }
