@@ -1,60 +1,72 @@
-
 package com.example.covid_19.model.worldPOJO;
 
 import com.google.gson.annotations.SerializedName;
 
-@SuppressWarnings("unused")
-public class Cases {
+public class Cases{
 
-    @SerializedName("active")
-    private Long mActive;
-    @SerializedName("critical")
-    private Long mCritical;
-    @SerializedName("new")
-    private String mNew;
-    @SerializedName("recovered")
-    private Long mRecovered;
-    @SerializedName("total")
-    private Long mTotal;
+	@SerializedName("new")
+	private String jsonMemberNew;
 
-    public Long getActive() {
-        return mActive;
-    }
+	@SerializedName("recovered")
+	private int recovered;
 
-    public void setActive(Long active) {
-        mActive = active;
-    }
+	@SerializedName("total")
+	private int total;
 
-    public Long getCritical() {
-        return mCritical;
-    }
+	@SerializedName("critical")
+	private int critical;
 
-    public void setCritical(Long critical) {
-        mCritical = critical;
-    }
+	@SerializedName("active")
+	private int active;
 
-    public String getNew() {
-        return mNew;
-    }
+	@SerializedName("1M_pop")
+	private String jsonMember1MPop;
 
-    public void setNew(String nnew) {
-        mNew = nnew;
-    }
+	public void setJsonMemberNew(String jsonMemberNew){
+		this.jsonMemberNew = jsonMemberNew;
+	}
 
-    public Long getRecovered() {
-        return mRecovered;
-    }
+	public String getJsonMemberNew(){
+		return jsonMemberNew;
+	}
 
-    public void setRecovered(Long recovered) {
-        mRecovered = recovered;
-    }
+	public void setRecovered(int recovered){
+		this.recovered = recovered;
+	}
 
-    public Long getTotal() {
-        return mTotal;
-    }
+	public int getRecovered(){
+		return recovered;
+	}
 
-    public void setTotal(Long total) {
-        mTotal = total;
-    }
+	public void setTotal(int total){
+		this.total = total;
+	}
 
+	public int getTotal(){
+		return total;
+	}
+
+	public void setCritical(int critical){
+		this.critical = critical;
+	}
+
+	public int getCritical(){
+		return critical;
+	}
+
+	public void setActive(int active){
+		this.active = active;
+	}
+
+	public int getActive(){
+		return active;
+	}
+
+	public void setJsonMember1MPop(String jsonMember1MPop){
+		this.jsonMember1MPop = jsonMember1MPop;
+	}
+
+	public String getJsonMember1MPop(){
+		return jsonMember1MPop;
+	}
 }

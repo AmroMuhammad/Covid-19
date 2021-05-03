@@ -1,62 +1,62 @@
-
 package com.example.covid_19.model.worldPOJO;
 
 import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
 
-@SuppressWarnings("unused")
-public class APIResponse {
+public class APIResponse{
 
-    @SerializedName("errors")
-    private List<Object> mErrors;
-    @SerializedName("get")
-    private String mGet;
-    @SerializedName("parameters")
-    private List<Object> mParameters;
-    @SerializedName("response")
-    private List<Response> mResponse;
-    @SerializedName("results")
-    private Long mResults;
+	@SerializedName("response")
+	private List<ResponseItem> response;
 
-    public List<Object> getErrors() {
-        return mErrors;
-    }
+	@SerializedName("get")
+	private String get;
 
-    public void setErrors(List<Object> errors) {
-        mErrors = errors;
-    }
+	@SerializedName("parameters")
+	private Parameters parameters;
 
-    public String getGet() {
-        return mGet;
-    }
+	@SerializedName("results")
+	private int results;
 
-    public void setGet(String get) {
-        mGet = get;
-    }
+	@SerializedName("errors")
+	private List<Object> errors;
 
-    public List<Object> getParameters() {
-        return mParameters;
-    }
+	public void setResponse(List<ResponseItem> response){
+		this.response = response;
+	}
 
-    public void setParameters(List<Object> parameters) {
-        mParameters = parameters;
-    }
+	public List<ResponseItem> getResponse(){
+		return response;
+	}
 
-    public List<Response> getResponse() {
-        return mResponse;
-    }
+	public void setGet(String get){
+		this.get = get;
+	}
 
-    public void setResponse(List<Response> response) {
-        mResponse = response;
-    }
+	public String getGet(){
+		return get;
+	}
 
-    public Long getResults() {
-        return mResults;
-    }
+	public void setParameters(Parameters parameters){
+		this.parameters = parameters;
+	}
 
-    public void setResults(Long results) {
-        mResults = results;
-    }
+	public Parameters getParameters(){
+		return parameters;
+	}
 
+	public void setResults(int results){
+		this.results = results;
+	}
+
+	public int getResults(){
+		return results;
+	}
+
+	public void setErrors(List<Object> errors){
+		this.errors = errors;
+	}
+
+	public List<Object> getErrors(){
+		return errors;
+	}
 }
