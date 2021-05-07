@@ -110,18 +110,10 @@ public class WorldFragment extends Fragment {
     }
 
     private void showDialog(){
-        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = getActivity().getIntent();
-                getActivity().finish();
-                startActivity(intent);
-            }
-        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-
+                progressBarWorld.setVisibility(View.GONE);
             }
         }).show();
     }

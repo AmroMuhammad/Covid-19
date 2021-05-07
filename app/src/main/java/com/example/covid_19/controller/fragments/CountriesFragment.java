@@ -110,25 +110,16 @@ public class CountriesFragment extends Fragment {
 
             @Override
             public void onError(ANError anError) {
-                showDialog();
+//                showDialog();
                 Log.e(TAG, "onError: " + anError.getErrorDetail());
             }
         });
     }
 
     private void showDialog() {
-        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(getContext()).setTitle("Network Error").setMessage("No Internet Connection").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = getActivity().getIntent();
-                getActivity().finish();
-                startActivity(intent);
-            }
-        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-
             }
         }).show();
     }
